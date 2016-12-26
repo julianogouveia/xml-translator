@@ -1,0 +1,4 @@
+row > name = user > name
+row > email = user > email
+row > phone = user > phone
+row > address > number = user > address > number

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table>
+	<row>
+		<name>Juliano</name>
+		<email>juliano@example.com</email>
+		<phone>123456789</phone>
+		<address>
+			<number>10</number>
+			<number>10</number>
+			<number>10</number>
+		</address>
+	</row>
+	<row>
+		<name>Fernando</name>
+		<email>fernando@example.com</email>
+		<phone>123456789</phone>
+		<address>
+			<number>10</number>
+			<number>10</number>
+			<number>10</number>
+		</address>
+	</row>
+	<row>
+		<name>Maria</name>
+		<email>maria@example.com</email>
+		<phone>123456789</phone>
+		<address>
+			<number>10</number>
+			<number>10</number>
+			<number>10</number>
+		</address>
+	</row>
+</table>
