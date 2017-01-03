@@ -1,4 +1,5 @@
 import re
+from collections import OrderedDict
 
 from exceptions import (NotFileException,
 						InvalidPathCharactersException,
@@ -8,6 +9,9 @@ from exceptions import (NotFileException,
 						OnlyOneAttributeInDestinationPathException,
 						OnlyOneFilterInSourcePathException,
 						CantApplyFilterInDestinationPathException)
+
+PATH_SEPARATOR = ">"
+XPATH_SELECTOR = "/"
 
 
 class PathSanitizer:
@@ -52,9 +56,9 @@ class XPath:
 
 	def __new__(cls, path):
 		try:
-			return path.split(">", 1)[1].replace(">", "/")
+			return path.split(PATH_SEPARATOR, 1)[1].replace(PATH_SEPARATOR, XPATH_SELECTOR)
 		except IndexError:
-			return path.split(">", 1)[0]
+			return path.split(PATH_SEPARATOR, 1)[0]
 
 
 class PathParser:
@@ -66,26 +70,23 @@ class PathParser:
 		source_path = path_validator.source_path
 		destination_path = path_validator.destination_path
 
-		self.root_xpath = "//{}".format(source_path.split(">", 1)[0])
-		self.splitted_path = source_path.split(">")
+		self.root_xpath = "//{}".format(source_path.split(PATH_SEPARATOR, 1)[0])
+		self.splitted_path = source_path.split(PATH_SEPARATOR)
 		self.source_path = source_path
 		self.xpath = XPath(source_path)
-		self.source_xpath = source_path.replace(">", "/")
+		self.source_xpath = source_path.replace(PATH_SEPARATOR, XPATH_SELECTOR)
 		self.destination_path = destination_path
 
 
 class PathDict:
 
-	def __new__(cls, path, value, many=False):
-		spplited_path = path.split(">")
+	def __new__(cls, path, value={}):
+		spplited_path = path.split(PATH_SEPARATOR)
 		default = spplited_path[-1]
-
-		if many:
-			value = [elem.text for elem in value]
 
 		cls.path_dict = value
 
 		for key in reversed(spplited_path):
-			cls.path_dict = {key.strip(): cls.path_dict}
+			cls.path_dict = OrderedDict(sorted({key.strip(): cls.path_dict}.items()))
 
 		return cls.path_dict
