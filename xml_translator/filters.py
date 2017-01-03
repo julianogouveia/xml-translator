@@ -1,3 +1,6 @@
+FILTER_SEPARATOR = "@"
+
+
 class Filter:
 
 	def __init__(self, name, function):

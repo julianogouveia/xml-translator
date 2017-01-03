@@ -3,7 +3,7 @@ from lxml import etree
 
 from path import PathParser, PathDict
 from helpers import recursive_dict_update
-from filters import Filter, Filters, strip_filter, lower_filter, upper_filter
+from filters import FILTER_SEPARATOR, Filter, Filters, strip_filter, lower_filter, upper_filter
 
 SOURCE_PATH_TYPE = "source_path"
 DESTINATION_PATH_TYPE = "destination_path"
@@ -62,7 +62,7 @@ class XMLTranslator:
 					new_childrens = []
 
 				if len(element_xpath.split("@")) > 1:
-					element_xpath, element_filter = element_xpath.split("@")
+					element_xpath, element_filter = element_xpath.split(FILTER_SEPARATOR)
 
 				elements = element.xpath(element_xpath)
 				new_childrens += self.translate(elements, element_childrens, element_filter)
