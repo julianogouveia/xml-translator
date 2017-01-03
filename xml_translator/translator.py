@@ -12,43 +12,43 @@ DESTINATION_PATH_TYPE = "destination_path"
 class XMLTranslator:
 
 	def __init__(self, mapping, xml):
-		self.mapping = mapping
-		self.xml = xml
-		self.xml_root = etree.parse(self.xml)
-		self.document = {}
-		self.filters = Filters()
+		self._mapping = mapping
+		self._xml = xml
+		self._xml_root = etree.parse(self._xml)
+		self._document = {}
+		self._filters = Filters()
+
+		self.set_filters()
 
 	def get_mapping(self, path_type=SOURCE_PATH_TYPE):
-		self.mapping.seek(0)
+		self._mapping.seek(0)
 		mapping = {}
 
-		for path in self.mapping:
+		for path in self._mapping:
 			parsed_path = PathParser(path)
 			mapping = recursive_dict_update(mapping, PathDict(getattr(parsed_path, path_type)))
 
 		return mapping
 
 	def set_filters(self):
-		self.filters.add(strip_filter)
-		self.filters.add(lower_filter)
-		self.filters.add(upper_filter)
+		self._filters.add(strip_filter)
+		self._filters.add(lower_filter)
+		self._filters.add(upper_filter)
 
 	def add_filter(self, filter):
-		self.filters.add(filter)
+		self._filters.add(filter)
 
 	def create_document(self):
-		self.set_filters()
-
 		source_mapping = self.get_mapping()
 		translated_elements = []
 
 		for element_xpath, element_childrens in source_mapping.items():
-			elements = self.xml_root.xpath("//{}".format(element_xpath))
+			elements = self._xml_root.xpath("//{}".format(element_xpath))
 			filtered_elements = self.translate(elements, element_childrens, None)
 			translated_elements.append(filtered_elements)
 
-		self.document = translated_elements
-		return self.document
+		self._document = translated_elements
+		return self._document
 
 	def translate(self, elements, childrens, filter_name):
 		translated_elements = []
@@ -73,7 +73,7 @@ class XMLTranslator:
 
 			if element_data:
 				if filter_name:
-					element_data = self.filters.apply(filter_name, element_data)
+					element_data = self._filters.apply(filter_name, element_data)
 
 				new_element[element_name]["data"] = element_data
 
